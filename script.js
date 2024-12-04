@@ -37,18 +37,61 @@ function operate(operator, a, b) {
 function updateDisplay() {
   const display = document.querySelector('.display');
   if (currentDisplayValue && !isNaN(currentDisplayValue)) {
-    currentDisplayValue = parseFloat(currentDisplayValue).toPrecision(13).replace(/\.?0+$/, '');
+    currentDisplayValue = parseFloat(currentDisplayValue)
+      .toPrecision(13)
+      .replace(/\.?0+$/, '');
   }
   display.textContent = currentDisplayValue || '0';
 }
 
 function appendDigit(digit) {
-  if (digit === '.' && currentDisplayValue.includes('.')) return
+  if (digit === '.' && currentDisplayValue.includes('.')) return;
   if (currentDisplayValue === '' && digit === '.') {
-    currentDisplayValue = '0'
+    currentDisplayValue = '0';
   }
   if (currentDisplayValue.length >= 15) return;
   currentDisplayValue += digit;
+  updateDisplay();
+}
+
+function handleOperator(key) {
+  if (firstNumber === '') {
+    firstNumber = currentDisplayValue;
+    operator = key;
+    currentDisplayValue = '';
+  } else if (operator) {
+    secondNumber = currentDisplayValue;
+    currentDisplayValue = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber)).toString();
+    updateDisplay();
+    firstNumber = currentDisplayValue;
+    operator = key;
+    currentDisplayValue = '';
+  }
+}
+
+function handleEquals() {
+  if (firstNumber !== '' && operator !== '' && currentDisplayValue !== '') {
+    secondNumber = currentDisplayValue;
+    currentDisplayValue = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber)).toString();
+    updateDisplay();
+    firstNumber = '';
+    secondNumber = '';
+    operator = '';
+  }
+}
+
+function handleBackspace() {
+  if (currentDisplayValue.length > 0) {
+    currentDisplayValue = currentDisplayValue.slice(0, -1);
+    updateDisplay();
+  }
+}
+
+function handleClear() {
+  firstNumber = '';
+  secondNumber = '';
+  operator = '';
+  currentDisplayValue = '';
   updateDisplay();
 }
 
@@ -62,46 +105,36 @@ digitButtons.forEach(button => {
 const operatorButtons = document.querySelectorAll('.operator');
 operatorButtons.forEach(button => {
   button.addEventListener('click', () => {
-    if (firstNumber === '') {
-      firstNumber = currentDisplayValue;
-      operator = button.textContent;
-      currentDisplayValue = '';
-    } else if (operator) {
-      secondNumber = currentDisplayValue;
-      currentDisplayValue = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber)).toString();
-      updateDisplay();
-      firstNumber = currentDisplayValue;
-      operator = button.textContent;
-      currentDisplayValue = '';
-    }
+    handleOperator(button.textContent);
   });
 });
 
 const equalsButton = document.querySelector('.equals');
-equalsButton.addEventListener('click', () => {
-  if (firstNumber !== '' && operator !== '' && currentDisplayValue !== '') {
-    secondNumber = currentDisplayValue;
-    currentDisplayValue = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber)).toString();
-    updateDisplay();
-    firstNumber = '';
-    secondNumber = '';
-    operator = '';
-  }
-});
+equalsButton.addEventListener('click', handleEquals);
 
 const clearButton = document.querySelector('.clear');
-clearButton.addEventListener('click', () => {
-  firstNumber = '';
-  secondNumber = '';
-  operator = '';
-  currentDisplayValue = '';
-  updateDisplay();
-});
+clearButton.addEventListener('click', handleClear);
 
 const backspaceButton = document.querySelector('.backspace');
-backspaceButton.addEventListener('click', () => {
-  if (currentDisplayValue.length > 0) {
-    currentDisplayValue = currentDisplayValue.slice(0, -1);
+backspaceButton.addEventListener('click', handleBackspace);
+
+document.addEventListener('keydown', (event) => {
+  const key = event.key;
+
+  if (!isNaN(key)) {
+    appendDigit(key);
+  } else if (key === '.') {
+    appendDigit(key);
+  } else if (['+', '-', '*', '/'].includes(key)) {
+    handleOperator(key);
+  } else if (key === 'Enter' || key === '=') {
+    handleEquals();
+  } else if (key === 'Backspace') {
+    handleBackspace();
+  } else if (key === 'Escape' || key === 'Delete') {
+    handleClear();
   }
 });
+
+
 
