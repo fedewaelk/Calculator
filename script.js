@@ -1,28 +1,34 @@
-let currentNumber = '';
-let previousNumber = '';
-let operation = '';
+let firstNumber = "";
+let secondNumber = "";
+let operator = "";
 
-function calculate() {
-    if (previousNumber === '' || currentNumber === '' || operation === '') return;
-  
-    const num1 = parseFloat(previousNumber);
-    const num2 = parseFloat(currentNumber);
-    let result = 0;
-
-    switch (operation) {
-        case '+':
-            result = a + b;
-            break;
-        case '-':
-            result = a - b;
-            break;
-        case '*':
-            result = a * b;
-            break;
-        case '*':
-            result = a * b;
-            break;  
-        default:
-            return;
-    }
+function add(a, b) {
+    return a + b;
 }
+function subtract(a, b) {
+    return a - b;
+}
+function multiply(a, b) {
+    return a * b;
+}
+function divide(a, b) {
+    if (b===0) {
+        return "ERROR"
+    }
+    return a / b;
+}
+
+function operate(operator, a, b) {
+    switch (operator) {
+      case '+':
+        return add(a, b);
+      case '-':
+        return subtract(a, b);
+      case '*':
+        return multiply(a, b);
+      case '/':
+        return divide(a, b);
+    }
+  }
+
+  
