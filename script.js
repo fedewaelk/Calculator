@@ -97,3 +97,11 @@ clearButton.addEventListener('click', () => {
   currentDisplayValue = '';
   updateDisplay();
 });
+
+const backspaceButton = document.querySelector('.backspace');
+backspaceButton.addEventListener('click', () => {
+  if (currentDisplayValue.length > 0) {
+    currentDisplayValue = currentDisplayValue.slice(0, -1);
+  }
+});
+

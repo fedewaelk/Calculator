@@ -53,4 +53,8 @@ body {
   .operator {
     background-color: blue;
   }
+
+  .backspace {
+    background-color: rgb(255, 115, 0);
+  }
   
