@@ -36,10 +36,18 @@ function operate(operator, a, b) {
 
 function updateDisplay() {
   const display = document.querySelector('.display');
+  if (currentDisplayValue && !isNaN(currentDisplayValue)) {
+    currentDisplayValue = parseFloat(currentDisplayValue).toPrecision(13).replace(/\.?0+$/, '');
+  }
   display.textContent = currentDisplayValue || '0';
 }
 
 function appendDigit(digit) {
+  if (digit === '.' && currentDisplayValue.includes('.')) return
+  if (currentDisplayValue === '' && digit === '.') {
+    currentDisplayValue = '0'
+  }
+  if (currentDisplayValue.length >= 15) return;
   currentDisplayValue += digit;
   updateDisplay();
 }
