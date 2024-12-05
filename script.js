@@ -55,17 +55,24 @@ function appendDigit(digit) {
 }
 
 function handleOperator(key) {
+  if (firstNumber === '' && currentDisplayValue === '') {
+    firstNumber = '0';
+    operator = key;
+    return;
+  }
   if (firstNumber === '') {
     firstNumber = currentDisplayValue;
     operator = key;
     currentDisplayValue = '';
-  } else if (operator) {
+  } else if (operator && currentDisplayValue !== '') {
     secondNumber = currentDisplayValue;
     currentDisplayValue = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber)).toString();
     updateDisplay();
     firstNumber = currentDisplayValue;
     operator = key;
     currentDisplayValue = '';
+  } else if (operator && currentDisplayValue === '') {
+    operator = key;
   }
 }
 
