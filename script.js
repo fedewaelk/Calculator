@@ -36,9 +36,9 @@ function operate(operator, a, b) {
 
 function updateDisplay() {
   const display = document.querySelector('.display');
-  if (currentDisplayValue && !isNaN(currentDisplayValue)) {
+  if (currentDisplayValue && !isNaN(currentDisplayValue) && !currentDisplayValue.includes('.')) {
     currentDisplayValue = parseFloat(currentDisplayValue)
-      .toPrecision(13)
+      .toFixed(12)
       .replace(/\.?0+$/, '');
   }
   display.textContent = currentDisplayValue || '0';
@@ -49,7 +49,7 @@ function appendDigit(digit) {
   if (currentDisplayValue === '' && digit === '.') {
     currentDisplayValue = '0';
   }
-  if (currentDisplayValue.length >= 15) return;
+  if (currentDisplayValue.length >= 14) return;
   currentDisplayValue += digit;
   updateDisplay();
 }
@@ -117,6 +117,14 @@ clearButton.addEventListener('click', handleClear);
 
 const backspaceButton = document.querySelector('.backspace');
 backspaceButton.addEventListener('click', handleBackspace);
+
+const signToggleButton = document.querySelector('.sign-toggle');
+signToggleButton.addEventListener('click', () => {
+  if (currentDisplayValue !== '') {
+    currentDisplayValue = (parseFloat(currentDisplayValue) * -1).toString();
+    updateDisplay();
+  }
+});
 
 document.addEventListener('keydown', (event) => {
   const key = event.key;
